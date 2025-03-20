@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrasi Seminar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { background-color: #e3e4e4; margin-left: 260px; }
+        .sidebar { width: 250px; position: fixed; height: 100vh; left: 0; top: 0; background: #102944; padding: 20px; color: white; }
+        .sidebar a { color: white; text-decoration: none; display: block; padding: 10px; }
+        .sidebar a:hover { background: #2f1fb7; border-radius: 5px; }
+        .container { max-width: 600px; margin-top: 50px; }
+        .error { color: red; font-size: 0.9em; }
+        .hidden { display: none; }
+        footer { position: fixed; width: 100%; bottom: 0; left: 0; background: #000; color: white; text-align: center; padding: 10px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h3>Menu</h3>
+        <a href="#">Home</a>
+        <a href="#">Tentang Seminar</a>
+        <a href="#">Registrasi</a>
+        <a href="#">Jadwal</a>
+        <a href="#">Pembicara</a>
+        <a href="#">Galeri</a>
+        <a href="#">Kontak</a>
+    </div>
+    
+    <header class="bg-primary text-white text-center py-3">
+        <h1>IT PNM Summit</h1>
+        <p>Registrasi Seminar Teknologi Nasional</p>
+    </header>
+    
+    <main class="container">
+        <h2 class="text-center mt-4">Form Registrasi</h2>
+        <form id="registrationForm">
+            <div class="mb-3">
+                <label class="form-label">Nama Lengkap</label>
+                <input type="text" class="form-control" id="name" required>
+                <div class="error hidden" id="nameError">Minimal 3 karakter.</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" required>
+                <div class="error hidden" id="emailError">Format email tidak valid.</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" required>
+                <div class="error hidden" id="passwordError">Minimal 8 karakter.</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Konfirmasi Password</label>
+                <input type="password" class="form-control" id="confirmPassword" required>
+                <div class="error hidden" id="confirmPasswordError">Password tidak cocok.</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Tanggal Lahir</label>
+                <input type="date" class="form-control" id="dob" required>
+                <div class="error hidden" id="dobError">Tanggal lahir harus sebelum 2006.</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Nomor HP</label>
+                <input type="text" class="form-control" id="phone" required>
+                <div class="error hidden" id="phoneError">Gunakan format Indonesia (08XXXXXXXXXX).</div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100" id="submitBtn" disabled>Daftar</button>
+        </form>
+        <div class="alert alert-success mt-3 hidden" id="successMessage">Registrasi berhasil!</div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 Future Tech Summit. All Rights Reserved.</p>
+        <p><p><a href="#">Kebijakan Privasi</a> | <a href="#">Syarat & Ketentuan</a></p>
+        <p>Kontak: info@futuretechsummit.com | Telepon: +62 812 3456 7890</p>
+            
+    </footer>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById("registrationForm");
+            const submitBtn = document.getElementById("submitBtn");
+            const successMessage = document.getElementById("successMessage");
+            const fields = ["name", "email", "password", "confirmPassword", "dob", "phone"];
+            
+            function validateForm() {
+                let valid = true;
+                
+                const name = document.getElementById("name").value;
+                document.getElementById("nameError").classList.toggle("hidden", name.length >= 3);
+                valid &= name.length >= 3;
+                
+                const email = document.getElementById("email").value;
+                document.getElementById("emailError").classList.toggle("hidden", email.includes("@") && email.includes("."));
+                valid &= email.includes("@") && email.includes(".");
+                
+                const password = document.getElementById("password").value;
+                document.getElementById("passwordError").classList.toggle("hidden", password.length >= 8);
+                valid &= password.length >= 8;
+                
+                const confirmPassword = document.getElementById("confirmPassword").value;
+                document.getElementById("confirmPasswordError").classList.toggle("hidden", password === confirmPassword);
+                valid &= password === confirmPassword;
+                
+                const dob = new Date(document.getElementById("dob").value);
+                const minDate = new Date("2006-01-01");
+                document.getElementById("dobError").classList.toggle("hidden", dob < minDate);
+                valid &= dob < minDate;
+                
+                const phone = document.getElementById("phone").value;
+                document.getElementById("phoneError").classList.toggle("hidden", /^08\d{8,11}$/.test(phone));
+                valid &= /^08\d{8,11}$/.test(phone);
+                
+                submitBtn.disabled = !valid;
+            }
+            
+            fields.forEach(field => {
+                document.getElementById(field).addEventListener("input", validateForm);
+            });
+            
+            form.addEventListener("submit", function(event) {
+                event.preventDefault();
+                successMessage.classList.remove("hidden");
+                form.reset();
+                submitBtn.disabled = true;
+            });
+        });
+    </script>
+</body>
+</html>
